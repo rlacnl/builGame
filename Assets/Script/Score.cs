@@ -1,41 +1,107 @@
-using System.Collections;
-using System.Collections.Generic;
+ï»¿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Score : MonoBehaviour
 {
-    public Text scoreText;         // ÀÎ½ºÆåÅÍ¿¡¼­ ¿¬°á
-    private int score = 0;
+    public Text scoreText;
+    public int score = 0;
 
-    private float scoreInterval = 1.0f;   // ½ÃÀÛ ½Ã 1ÃÊ¸¶´Ù Áõ°¡
     private float timer = 0f;
+
+    [Header("Milestone UI")]
+    public Image milestoneImage;
+    public Text milestoneText;
+
+    [Header("Milestone Data")]
+    public Sprite[] milestoneSprites;
+
+    private string[] milestoneMessages = new string[]
+    {
+        "1ë¼ìš´ë“œ\nì§‘",
+        "2ë¼ìš´ë“œ\në²„ìŠ¤ì •ë¥˜ì¥",
+        "3ë¼ìš´ë“œ\nì‚¼ì„±ì—¬ê³ ",
+        "4ë¼ìš´ë“œ\nìš´ë™ì¥",
+        "5ë¼ìš´ë“œ\nêµì‹¤",
+        "ìµœì¢…ë¼ìš´ë“œ\nì¶œì„ ì²´í¬!!!"
+    };
+
+    private float[] scoreIntervals = new float[]
+    {
+        1.0f,     // 0~99
+        0.825f,   // 100~199
+        0.825f,   // 200~299
+        0.8f,     // 300~399
+        0.8f,     // 400~499
+        0.7f      // 500~599
+    };
+
+    private int lastMilestoneIndex = -1;
 
     void Start()
     {
         UpdateScoreText();
+        ShowMilestoneUI(0);
+        lastMilestoneIndex = 0; 
+        StartGame startGameScript = gameObject.GetComponent<StartGame>();
+        if (startGameScript != null)
+        {
+            startGameScript.enabled = true; // ì´ê±´ MonoBehaviourê°€ ì œê³µí•˜ëŠ” ì†ì„±ì„
+        }
     }
 
     void Update()
     {
-        timer += Time.deltaTime;
+        if (score >= 600)
+            return;
 
-        if (timer >= scoreInterval)
+        timer += Time.deltaTime;
+        float currentInterval = GetScoreInterval();
+
+        if (timer >= currentInterval)
         {
             timer = 0f;
             AddScore(1);
         }
+
+        // ğŸŸ¨ UIëŠ” í•­ìƒ í˜„ì¬ milestoneì— ë§ì¶° ê°±ì‹ 
+        int currentIndex = score / 100;
+        if (currentIndex != lastMilestoneIndex && currentIndex < milestoneSprites.Length)
+        {
+            ShowMilestoneUI(currentIndex);
+            lastMilestoneIndex = currentIndex;
+        }
     }
 
-    void AddScore(int amount)
+    public void AddScore(int amount)
     {
+        if (score >= 600)
+            return;
+
         score += amount;
         UpdateScoreText();
+    }
 
-        // 100Á¡ ´ÜÀ§·Î ¼Óµµ Áõ°¡ (ÃÖ´ë ÇÑ°è ¼³Á¤ °¡´É)
-        if (score % 100 == 0 && scoreInterval > 0.2f)
+    private float GetScoreInterval()
+    {
+        int index = score / 100;
+        if (index >= scoreIntervals.Length)
+            return scoreIntervals[scoreIntervals.Length - 1];
+        return scoreIntervals[index];
+    }
+
+    private void ShowMilestoneUI(int index)
+    {
+        if (milestoneImage != null && milestoneSprites.Length > index)
         {
-            scoreInterval -= 0.1f;
+            milestoneImage.sprite = milestoneSprites[index];
+            milestoneImage.gameObject.SetActive(true);
+        }
+
+        if (milestoneText != null && milestoneMessages.Length > index)
+        {
+            milestoneText.text = milestoneMessages[index];
+            milestoneText.gameObject.SetActive(true);
         }
     }
 
@@ -43,50 +109,18 @@ public class Score : MonoBehaviour
     {
         scoreText.text = "Score: " + score;
     }
-}
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 
-public class Score : MonoBehaviour
-{
-    public Text scoreText;             // ÀÎ½ºÆåÅÍ¿¡¼­ ¿¬°á
-    private int score = 0;
-
-    private float scoreInterval = 1.0f;   // ½ÃÀÛ ½Ã 1ÃÊ¸¶´Ù Áõ°¡
-    private float timer = 0f;
-
-    void Start()
+    public void SetScore(int newScore)
     {
+        score = newScore;
         UpdateScoreText();
+        int index = score / 100;
+        ShowMilestoneUI(index);
+        lastMilestoneIndex = index;
     }
 
-    void Update()
+    public int GetScore()
     {
-        timer += Time.deltaTime;
-
-        if (timer >= scoreInterval)
-        {
-            timer = 0f;
-            AddScore(1);
-        }
-    }
-
-    void AddScore(int amount)
-    {
-        score += amount;
-        UpdateScoreText();
-
-        // 100Á¡ ´ÜÀ§·Î ¼Óµµ Áõ°¡ (ÃÖ´ë ÇÑ°è ¼³Á¤ °¡´É)
-        if (score % 100 == 0 && scoreInterval > 0.2f)
-        {
-            scoreInterval -= 0.1f;
-        }
-    }
-
-    void UpdateScoreText()
-    {
-        scoreText.text = "Score: " + score;
+        return score;
     }
 }

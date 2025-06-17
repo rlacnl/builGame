@@ -5,8 +5,9 @@ using UnityEngine;
 public class User : MonoBehaviour
 {
     public float jumpForce = 5f;
+    public float doubleJumpForce = 6f; // 2단 점프 힘을 조금 더 세게
     public float moveSpeed = 5f;
-    public float smoothTime = 0.1f; // 부드러운 가속/감속 시간
+    public float smoothTime = 0.1f;
 
     private Rigidbody2D rb;
     private Vector2 startPosition;
@@ -14,10 +15,12 @@ public class User : MonoBehaviour
     public float groundTolerance = 0.05f;
 
     private int jumpCount = 0;
-    private const int maxJumpCount = 1;
+    private const int maxJumpCount = 2;  // 2단 점프
 
     private Animator animator;
     private float velocityX = 0f;
+
+    private bool jumpPressed = false;
 
     void Start()
     {
@@ -30,7 +33,12 @@ public class User : MonoBehaviour
             Debug.LogError("[User] Animator가 필요합니다!");
 
         startY = transform.position.y;
-        startPosition = transform.position; // 시작 위치 저장
+        startPosition = transform.position;
+        StartGame startGameScript = gameObject.GetComponent<StartGame>();
+        if (startGameScript != null)
+        {
+            startGameScript.enabled = true; // 이건 MonoBehaviour가 제공하는 속성임
+        }
     }
 
     void Update()
@@ -59,25 +67,32 @@ public class User : MonoBehaviour
             animator.SetBool("walk", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && jumpCount < maxJumpCount)
+        // 점프 입력 감지 (버튼 누름을 기억해둠)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            jumpPressed = true;
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (jumpPressed && jumpCount < maxJumpCount)
+        {
+            float appliedJumpForce = (jumpCount == 0) ? jumpForce : doubleJumpForce;
+            rb.velocity = new Vector2(rb.velocity.x, 0); // y속도 초기화 (중력 영향 중첩 방지)
+            rb.AddForce(Vector2.up * appliedJumpForce, ForceMode2D.Impulse);
+
             jumpCount++;
             animator.SetBool("UserJump", true);
             animator.SetBool("walk", false);
+
+            jumpPressed = false;
         }
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        // 방법 1: 태그로 체크
-        if (collision.CompareTag("EventSystem"))
-        {
-            ResetToStart();
-        }
-
-        // 방법 2: 이름으로 체크
-        if (collision.gameObject.name.Contains("EventSystem"))
+        if (collision.CompareTag("EventSystem") || collision.gameObject.name.Contains("EventSystem"))
         {
             ResetToStart();
         }
@@ -89,3 +104,4 @@ public class User : MonoBehaviour
         rb.velocity = Vector2.zero;
     }
 }
+
