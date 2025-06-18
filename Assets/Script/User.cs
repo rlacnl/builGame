@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class User : MonoBehaviour
 {
     public float jumpForce = 5f;
-    public float doubleJumpForce = 6f; // 2´Ü Á¡ÇÁ ÈûÀ» Á¶±İ ´õ ¼¼°Ô
+    public float doubleJumpForce = 6f; // 2ë‹¨ ì í”„ í˜ì„ ì¡°ê¸ˆ ë” ì„¸ê²Œ
     public float moveSpeed = 5f;
     public float smoothTime = 0.1f;
 
@@ -15,7 +16,7 @@ public class User : MonoBehaviour
     public float groundTolerance = 0.05f;
 
     private int jumpCount = 0;
-    private const int maxJumpCount = 3;  // 2´Ü Á¡ÇÁ
+    private const int maxJumpCount = 3;  // 2ë‹¨ ì í”„
 
     private Animator animator;
     private float velocityX = 0f;
@@ -28,16 +29,16 @@ public class User : MonoBehaviour
         animator = GetComponent<Animator>();
 
         if (rb == null)
-            Debug.LogError("[User] Rigidbody2D°¡ ÇÊ¿äÇÕ´Ï´Ù!");
+            Debug.LogError("[User] Rigidbody2Dê°€ í•„ìš”í•©ë‹ˆë‹¤!");
         if (animator == null)
-            Debug.LogError("[User] Animator°¡ ÇÊ¿äÇÕ´Ï´Ù!");
+            Debug.LogError("[User] Animatorê°€ í•„ìš”í•©ë‹ˆë‹¤!");
 
         startY = transform.position.y;
         startPosition = transform.position;
         StartGame startGameScript = gameObject.GetComponent<StartGame>();
         if (startGameScript != null)
         {
-            startGameScript.enabled = true; // ÀÌ°Ç MonoBehaviour°¡ Á¦°øÇÏ´Â ¼Ó¼ºÀÓ
+            startGameScript.enabled = true; // ì´ê±´ MonoBehaviourê°€ ì œê³µí•˜ëŠ” ì†ì„±ì„
         }
     }
 
@@ -67,7 +68,7 @@ public class User : MonoBehaviour
             animator.SetBool("walk", false);
         }
 
-        // Á¡ÇÁ ÀÔ·Â °¨Áö (¹öÆ° ´©¸§À» ±â¾ïÇØµÒ)
+        // ì í”„ ì…ë ¥ ê°ì§€ (ë²„íŠ¼ ëˆ„ë¦„ì„ ê¸°ì–µí•´ë‘ )
         if (Input.GetKeyDown(KeyCode.Space))
         {
             jumpPressed = true;
@@ -79,7 +80,7 @@ public class User : MonoBehaviour
         if (jumpPressed && jumpCount < maxJumpCount)
         {
             float appliedJumpForce = (jumpCount == 0) ? jumpForce : doubleJumpForce;
-            rb.velocity = new Vector2(rb.velocity.x, 0); // y¼Óµµ ÃÊ±âÈ­ (Áß·Â ¿µÇâ ÁßÃ¸ ¹æÁö)
+            rb.velocity = new Vector2(rb.velocity.x, 0); // yì†ë„ ì´ˆê¸°í™” (ì¤‘ë ¥ ì˜í–¥ ì¤‘ì²© ë°©ì§€)
             rb.AddForce(Vector2.up * appliedJumpForce, ForceMode2D.Impulse);
 
             jumpCount++;
@@ -95,6 +96,14 @@ public class User : MonoBehaviour
         if (collision.CompareTag("EventSystem") || collision.gameObject.name.Contains("EventSystem"))
         {
             ResetToStart();
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.CompareTag("obstacle"))
+        {
+            SceneManager.LoadScene("ClearScene");
         }
     }
 
