@@ -505,6 +505,7 @@ MonoBehaviour:
   moveSpeed: 5
   smoothTime: 0.1
   groundTolerance: 0.05
+  scoreText: {fileID: 1892984704}
 --- !u!50 &264501308
 Rigidbody2D:
   serializedVersion: 4
@@ -1267,7 +1268,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 1892984704}
-  score: 100
+  score: 0
   milestoneImage: {fileID: 11536847}
   milestoneText: {fileID: 320968807}
   milestoneSprites:

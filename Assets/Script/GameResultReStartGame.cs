@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;  // ✅ 이 줄 추가 필요
 
-public class ReStartGame : MonoBehaviour
+public class GameResultReStartGame : MonoBehaviour
 {
     public void LoadGameScene()
     {

@@ -84,11 +84,14 @@ public class Score : MonoBehaviour
 
     private float GetScoreInterval()
     {
-        int index = score / 100;
-        if (index >= scoreIntervals.Length)
-            return scoreIntervals[scoreIntervals.Length - 1];
-        return scoreIntervals[index];
+        float baseInterval = 1.0f;
+        float intervalReduction = 0.25f * (score / 100);
+        float interval = baseInterval - intervalReduction;
+
+        // 최소 간격 제한 (예: 0.1초)
+        return Mathf.Max(interval, 0.1f);
     }
+
 
     private void ShowMilestoneUI(int index)
     {

@@ -48,6 +48,14 @@ public class MakePrefab : MonoBehaviour
     void Update()
     {
         int score = ParseScoreFromText();
+
+        // 600점 도달 시 씬 전환
+        if (score >= 600)
+        {
+            SceneManager.LoadScene("GameResultScene");
+            return; // 이후 로직 실행하지 않도록 return
+        }
+
         int roundIndex = GetRoundIndex(score);
 
         if (roundIndex < 0 || roundIndex >= roundSpawnIntervals.Length)
@@ -92,7 +100,7 @@ public class MakePrefab : MonoBehaviour
                 variants = round5Variants;
                 variantYs = round5YPositions;
                 break;
-            case 5:  // 6라운드 추가
+            case 5:
                 variants = round6Variants;
                 variantYs = round6YPositions;
                 break;
@@ -110,7 +118,6 @@ public class MakePrefab : MonoBehaviour
         if (prefabToSpawn != null)
             SpawnPrefab(prefabToSpawn, yForSpawn, speed);
 
-        // 랜덤 장애물 생성
         if (score >= 200 && randomObstaclePrefabs != null && randomObstaclePrefabs.Length > 0)
         {
             if (Random.value < 0.5f)
@@ -121,6 +128,7 @@ public class MakePrefab : MonoBehaviour
             }
         }
     }
+
 
     void SpawnPrefab(GameObject prefab, float baseY, float speed)
     {
