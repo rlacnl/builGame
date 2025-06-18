@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - obstacle
+  - EventSystem
   layers:
   - Default
   - TransparentFX

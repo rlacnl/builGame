@@ -77,8 +77,16 @@ public class User : MonoBehaviour
 
             jumpPressed = false;
         }
+
+        // y 좌표가 startY 아래로 내려가지 않도록 제한
+        if (transform.position.y < startY)
+        {
+            rb.position = new Vector2(rb.position.x, startY);
+            rb.velocity = new Vector2(rb.velocity.x, Mathf.Max(rb.velocity.y, 0));
+        }
     }
 
+    // ✅ obstacle은 일반 충돌로 처리
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("obstacle"))
@@ -86,6 +94,16 @@ public class User : MonoBehaviour
             int score = ParseScoreFromText();
             ScoreManager.FinalScore = score;
             SceneManager.LoadScene("ClearScene");
+        }
+    }
+
+    // ✅ EventSystem은 트리거로 처리
+    void OnTriggerEnter2D(Collider2D collider)
+    {
+        if (collider.CompareTag("EventSystem"))
+        {
+            rb.velocity = Vector2.zero;
+            transform.position = startPosition;
         }
     }
 
