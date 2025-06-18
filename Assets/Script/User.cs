@@ -15,7 +15,7 @@ public class User : MonoBehaviour
     public float groundTolerance = 0.05f;
 
     private int jumpCount = 0;
-    private const int maxJumpCount = 2;  // 2단 점프
+    private const int maxJumpCount = 3;  // 2단 점프
 
     private Animator animator;
     private float velocityX = 0f;
