@@ -69,10 +69,15 @@ public class Score : MonoBehaviour
 
     private float GetScoreInterval()
     {
-        float baseInterval = 1.0f;
-        float intervalReduction = 0.25f * (score / 100);
-        return Mathf.Max(baseInterval - intervalReduction, 0.1f);
+        return 0.4f;
     }
+
+    //private float GetScoreInterval()
+    //{
+    //    float baseInterval = 1.0f;
+    //    float intervalReduction = 0.25f * (score / 100);
+    //    return Mathf.Max(baseInterval - intervalReduction, 0.1f);
+    //}
 
     private void ShowMilestoneUI(int index)
     {
