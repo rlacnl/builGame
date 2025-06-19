@@ -1266,7 +1266,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 1892984704}
-  score: 100
+  score: 0
   milestoneImage: {fileID: 11536847}
   milestoneTextImage: {fileID: 1030888472}
   milestoneSprites:
