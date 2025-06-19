@@ -1187,10 +1187,12 @@ MonoBehaviour:
   - {fileID: 9009534221264548121, guid: 0d6a608d28f6d4246b7c712220ce9255, type: 3}
   - {fileID: 1008363573624266811, guid: 036eab3c3893008449e749303657ee95, type: 3}
   - {fileID: 2242418709954146258, guid: 94767452c75d18b4f87bcec3156a095d, type: 3}
+  - {fileID: 8125776078929407579, guid: f0da73568c8b37640ad2a9fbfd55ac94, type: 3}
   round2YPositions:
-  - -1.55
-  - -1.55
-  - -1.55
+  - -1.6
+  - -1.56
+  - -1.56
+  - -2.1
   round3Variants:
   - {fileID: 517390223536554731, guid: 8d005fce5e7845f42bca118051172fc7, type: 3}
   - {fileID: 5724527545756450981, guid: 5809ccad326007449b5b6a3e3e514d75, type: 3}
@@ -1246,11 +1248,11 @@ MonoBehaviour:
   - 8.5
   roundSpawnIntervals:
   - 3
-  - 2
-  - 2
+  - 2.5
+  - 2.5
   - 2
   - 1.8
-  - 1.5
+  - 1.65
 --- !u!114 &1912702263
 MonoBehaviour:
   m_ObjectHideFlags: 0
