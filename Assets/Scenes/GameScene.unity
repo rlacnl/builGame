@@ -1192,7 +1192,7 @@ MonoBehaviour:
   - -1.6
   - -1.56
   - -1.56
-  - -1.9
+  - -1.85
   round3Variants:
   - {fileID: 517390223536554731, guid: 8d005fce5e7845f42bca118051172fc7, type: 3}
   - {fileID: 5724527545756450981, guid: 5809ccad326007449b5b6a3e3e514d75, type: 3}

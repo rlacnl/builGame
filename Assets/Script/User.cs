@@ -35,7 +35,6 @@ public class User : MonoBehaviour
     {
         float targetVelocityX = Input.GetAxisRaw("Horizontal") * moveSpeed;
         float newVelocityX = Mathf.SmoothDamp(rb.velocity.x, targetVelocityX, ref velocityX, smoothTime);
-
         rb.velocity = new Vector2(newVelocityX, rb.velocity.y);
 
         if (targetVelocityX > 0.1f)
@@ -47,7 +46,6 @@ public class User : MonoBehaviour
 
         if (isGrounded)
         {
-            jumpCount = 0;
             animator.SetBool("UserJump", false);
             animator.SetBool("walk", Mathf.Abs(newVelocityX) > 0.1f);
         }
@@ -57,9 +55,16 @@ public class User : MonoBehaviour
             animator.SetBool("walk", false);
         }
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        // ✅ jumpCount가 3 미만일 때만 Space 입력 처리
+        if (Input.GetKeyDown(KeyCode.Space) && jumpCount < maxJumpCount)
         {
             jumpPressed = true;
+        }
+
+        // ✅ startY에 거의 도달한 경우 점프 횟수 리셋
+        if (Mathf.Abs(transform.position.y - startY) <= groundTolerance)
+        {
+            jumpCount = 0;
         }
     }
 
@@ -74,11 +79,11 @@ public class User : MonoBehaviour
             jumpCount++;
             animator.SetBool("UserJump", true);
             animator.SetBool("walk", false);
-
-            jumpPressed = false;
         }
 
-        // y 좌표가 startY 아래로 내려가지 않도록 제한
+        jumpPressed = false;
+
+        // y좌표가 startY 아래로 내려가지 않도록 제한
         if (transform.position.y < startY)
         {
             rb.position = new Vector2(rb.position.x, startY);
@@ -86,7 +91,6 @@ public class User : MonoBehaviour
         }
     }
 
-    // ✅ obstacle은 일반 충돌로 처리
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.collider.CompareTag("obstacle"))
@@ -97,7 +101,6 @@ public class User : MonoBehaviour
         }
     }
 
-    // ✅ EventSystem은 트리거로 처리
     void OnTriggerEnter2D(Collider2D collider)
     {
         if (collider.CompareTag("EventSystem"))
