@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class StartGame : MonoBehaviour
 {
-    public GameObject[] scriptsToEnable; // 작동시킬 스크립트들이 붙은 오브젝트들
+    public GameObject[] scriptsToEnable; 
     public GameObject player;
-    public GameObject thisButton; // 버튼 오브젝트 자기 자신
+    public GameObject thisButton; 
 
     private bool hasStarted = false;
 
@@ -16,7 +16,6 @@ public class StartGame : MonoBehaviour
         {
             hasStarted = true;
 
-            // 필요한 스크립트 켜기
             foreach (GameObject obj in scriptsToEnable)
             {
                 MonoBehaviour[] comps = obj.GetComponents<MonoBehaviour>();
@@ -24,7 +23,6 @@ public class StartGame : MonoBehaviour
                     comp.enabled = true;
             }
 
-            // 플레이어 이동/점프 스크립트도 켜기 (예: User 스크립트)
             if (player != null)
             {
                 var userScript = player.GetComponent<User>();
@@ -32,7 +30,6 @@ public class StartGame : MonoBehaviour
                     userScript.enabled = true;
             }
 
-            // 버튼 비활성화
             thisButton.SetActive(false);
         }
     }

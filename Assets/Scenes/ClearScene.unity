@@ -503,7 +503,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\uCD5C\uC885 \uC2A4\uCF54\uC5B4 : "
+  m_Text: 'Score : '
 --- !u!222 &900295897
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -7,6 +7,6 @@ public class ShowFinalScore : MonoBehaviour
 
     void Start()
     {
-        finalScoreText.text = "최종 스코어 : " + ScoreManager.FinalScore.ToString();
+        finalScoreText.text = "Score : " + ScoreManager.FinalScore.ToString();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;  // ✅ 씬 전환을 위해 꼭 필요
+using UnityEngine.SceneManagement; 
 
 public class Score : MonoBehaviour
 {
@@ -14,7 +14,7 @@ public class Score : MonoBehaviour
     public Image milestoneTextImage;
 
     [Header("Milestone Data")]
-    public Sprite[] milestoneSprites;      // milestoneImage에 쓸 스프라이트 추가
+    public Sprite[] milestoneSprites;  
     public Sprite[] milestoneTextSprites;
 
     private int lastMilestoneIndex = -1;
@@ -35,7 +35,7 @@ public class Score : MonoBehaviour
     {
         if (score >= 600)
         {
-            SceneManager.LoadScene("GameResultScene");  // ✅ 600점 도달 시 씬 전환
+            SceneManager.LoadScene("GameResultScene");  
             return;
         }
 
@@ -71,13 +71,6 @@ public class Score : MonoBehaviour
     {
         return 0.4f;
     }
-
-    //private float GetScoreInterval()
-    //{
-    //    float baseInterval = 1.0f;
-    //    float intervalReduction = 0.25f * (score / 100);
-    //    return Mathf.Max(baseInterval - intervalReduction, 0.1f);
-    //}
 
     private void ShowMilestoneUI(int index)
     {

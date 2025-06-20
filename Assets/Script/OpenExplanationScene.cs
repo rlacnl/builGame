@@ -7,6 +7,6 @@ public class OpenExplanationScene : MonoBehaviour
 {
     public void LoadGameScene()
     {
-        SceneManager.LoadScene("explanationScene");  // GameScene이라는 씬을 로드합니다
+        SceneManager.LoadScene("explanationScene");
     }
 }

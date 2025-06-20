@@ -19,7 +19,6 @@ public class MakePrefab : MonoBehaviour
     public GameObject[] round5Variants;
     public float[] round5YPositions = new float[] { 1f, 1.5f };
 
-    // 6라운드 변수 추가
     public GameObject[] round6Variants;
     public float[] round6YPositions = new float[] { 2f, 2.5f };
 
@@ -30,10 +29,8 @@ public class MakePrefab : MonoBehaviour
     private float timer = 0f;
     public Vector3 spawnPosition = new Vector3(10f, 0f, 0f);
 
-    // 6라운드 스피드 추가
     public float[] roundSpeeds = new float[] { 2f, 2.5f, 5f, 3.5f, 4f, 4.5f };
 
-    // 6라운드 스폰 간격 추가
     public float[] roundSpawnIntervals = new float[] { 5f, 5f, 2f, 4f, 3f, 3f };
 
     void Start()
@@ -41,7 +38,7 @@ public class MakePrefab : MonoBehaviour
         StartGame startGameScript = gameObject.GetComponent<StartGame>();
         if (startGameScript != null)
         {
-            startGameScript.enabled = true; // 이건 MonoBehaviour가 제공하는 속성임
+            startGameScript.enabled = true;
         }
     }
 
@@ -92,7 +89,7 @@ public class MakePrefab : MonoBehaviour
                 variants = round5Variants;
                 variantYs = round5YPositions;
                 break;
-            case 5:  // 6라운드 추가
+            case 5:  
                 variants = round6Variants;
                 variantYs = round6YPositions;
                 break;
@@ -110,7 +107,6 @@ public class MakePrefab : MonoBehaviour
         if (prefabToSpawn != null)
             SpawnPrefab(prefabToSpawn, yForSpawn, speed);
 
-        // 랜덤 장애물 생성
         if (score >= 200 && randomObstaclePrefabs != null && randomObstaclePrefabs.Length > 0)
         {
             if (Random.value < 0.5f)

@@ -55,13 +55,11 @@ public class User : MonoBehaviour
             animator.SetBool("walk", false);
         }
 
-        // ✅ jumpCount가 3 미만일 때만 Space 입력 처리
         if (Input.GetKeyDown(KeyCode.Space) && jumpCount < maxJumpCount)
         {
             jumpPressed = true;
         }
 
-        // ✅ startY에 거의 도달한 경우 점프 횟수 리셋
         if (Mathf.Abs(transform.position.y - startY) <= groundTolerance)
         {
             jumpCount = 0;
@@ -83,7 +81,6 @@ public class User : MonoBehaviour
 
         jumpPressed = false;
 
-        // y좌표가 startY 아래로 내려가지 않도록 제한
         if (transform.position.y < startY)
         {
             rb.position = new Vector2(rb.position.x, startY);
