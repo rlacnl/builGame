@@ -33,6 +33,14 @@ public class User : MonoBehaviour
 
     void Update()
     {
+        if (StopGameScript.IsPaused)
+        {
+            // 정지 중이면 애니메이션도 비활성화 (선택사항)
+            animator.SetBool("UserJump", false);
+            animator.SetBool("walk", false);
+            return;
+        }
+
         float targetVelocityX = Input.GetAxisRaw("Horizontal") * moveSpeed;
         float newVelocityX = Mathf.SmoothDamp(rb.velocity.x, targetVelocityX, ref velocityX, smoothTime);
         rb.velocity = new Vector2(newVelocityX, rb.velocity.y);
@@ -60,7 +68,7 @@ public class User : MonoBehaviour
             jumpPressed = true;
         }
 
-        if (Mathf.Abs(transform.position.y - startY) <= groundTolerance)
+        if (isGrounded)
         {
             jumpCount = 0;
         }
@@ -68,6 +76,8 @@ public class User : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (StopGameScript.IsPaused) return;
+
         if (jumpPressed && jumpCount < maxJumpCount)
         {
             float appliedJumpForce = (jumpCount == 0) ? jumpForce : doubleJumpForce;
@@ -81,6 +91,7 @@ public class User : MonoBehaviour
 
         jumpPressed = false;
 
+        // 바닥보다 아래로 떨어지면 위치 보정
         if (transform.position.y < startY)
         {
             rb.position = new Vector2(rb.position.x, startY);

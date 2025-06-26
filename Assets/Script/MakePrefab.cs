@@ -4,7 +4,6 @@ using UnityEngine.UI;
 
 public class MakePrefab : MonoBehaviour
 {
-    // Prefab variants & Y positions by round
     public GameObject[] round1Variants;
     public float[] round1YPositions = new float[] { -3.7f, -3.0f };
     public GameObject[] round2Variants;
@@ -18,24 +17,21 @@ public class MakePrefab : MonoBehaviour
     public GameObject[] round6Variants;
     public float[] round6YPositions = new float[] { 2f, 2.5f };
 
-    // Random obstacles
     public GameObject[] randomObstaclePrefabs;
     public float randomObstacleY = 0f;
 
-    // UI Score text
     public Text scoreText;
 
-    // Timer and spawn control
     private float timer = 0f;
     public Vector3 spawnPosition = new Vector3(10f, 0f, 0f);
 
-    // Round speeds & spawn intervals
     public float[] roundSpeeds = new float[] { 2f, 2.5f, 5f, 3.5f, 4f, 4.5f };
     public float[] roundSpawnIntervals = new float[] { 5f, 5f, 2f, 4f, 3f, 3f };
 
+    public List<GameObject> activePrefabs = new List<GameObject>();
+
     void Start()
     {
-        // 자동 활성화된 다른 스크립트 있다면 켜기 (필요시)
         var startGameScript = gameObject.GetComponent<StartGame>();
         if (startGameScript != null)
             startGameScript.enabled = true;
@@ -43,7 +39,6 @@ public class MakePrefab : MonoBehaviour
 
     void Update()
     {
-        // 게임 일시정지 시 아무것도 하지 않음
         if (StopGameScript.IsPaused || !this.enabled) return;
 
         int score = ParseScoreFromText();
@@ -63,7 +58,6 @@ public class MakePrefab : MonoBehaviour
 
         Debug.Log($"[Spawn] Score: {score}, RoundIndex: {roundIndex}, Interval: {currentInterval}, Speed: {speed}");
 
-        // 라운드에 맞는 프리팹 선택
         GameObject prefabToSpawn = null;
         float yForSpawn = 0f;
         GameObject[] variants = null;
@@ -108,7 +102,6 @@ public class MakePrefab : MonoBehaviour
         if (prefabToSpawn != null)
             SpawnPrefab(prefabToSpawn, yForSpawn, speed);
 
-        // 점수 200 이상일 때 랜덤 장애물 스폰 (50% 확률)
         if (score >= 200 && randomObstaclePrefabs != null && randomObstaclePrefabs.Length > 0)
         {
             if (Random.value < 0.5f)
@@ -122,30 +115,25 @@ public class MakePrefab : MonoBehaviour
 
     void SpawnPrefab(GameObject prefab, float baseY, float speed)
     {
-        if (StopGameScript.IsPaused) return; // 중복 방어
+        if (StopGameScript.IsPaused) return;
 
         Vector3 spawnPos = new Vector3(spawnPosition.x, baseY, 0f);
         GameObject clone = Instantiate(prefab, spawnPos, Quaternion.identity);
+        activePrefabs.Add(clone);
         Destroy(clone, 12f);
 
         Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();
         if (rb != null)
-        {
             rb.velocity = Vector2.left * speed;
-            Debug.Log($"[SpawnPrefab] {prefab.name} velocity set to {rb.velocity}");
-        }
-        else
-        {
-            Debug.LogWarning($"[SpawnPrefab] Rigidbody2D missing on prefab {prefab.name}");
-        }
     }
 
     void SpawnObstacle(GameObject prefab)
     {
-        if (StopGameScript.IsPaused) return; // 중복 방어
+        if (StopGameScript.IsPaused) return;
 
         Vector3 spawnPos = new Vector3(spawnPosition.x, randomObstacleY, spawnPosition.z);
         GameObject clone = Instantiate(prefab, spawnPos, Quaternion.identity);
+        activePrefabs.Add(clone);
         Destroy(clone, 12f);
 
         Rigidbody2D rb = clone.GetComponent<Rigidbody2D>();

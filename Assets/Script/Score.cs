@@ -107,4 +107,15 @@ public class Score : MonoBehaviour
     {
         return score;
     }
+
+    // 기존 Score 클래스 내부
+
+    public void ResetScore()
+    {
+        score = 0;
+        UpdateScoreText();
+        ShowMilestoneUI(0);
+        lastMilestoneIndex = 0;
+    }
+
 }
