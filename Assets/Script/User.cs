@@ -64,6 +64,11 @@ public class User : MonoBehaviour
         {
             jumpCount = 0;
         }
+
+        if (Input.GetKey("escape"))
+        {
+            SceneManager.LoadScene("mainScene");
+        }
     }
 
     void FixedUpdate()
