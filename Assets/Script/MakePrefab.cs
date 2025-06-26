@@ -4,46 +4,48 @@ using UnityEngine.UI;
 
 public class MakePrefab : MonoBehaviour
 {
+    // Prefab variants & Y positions by round
     public GameObject[] round1Variants;
     public float[] round1YPositions = new float[] { -3.7f, -3.0f };
-
     public GameObject[] round2Variants;
     public float[] round2YPositions = new float[] { -2.5f, -1.8f };
-
     public GameObject[] round3Variants;
     public float[] round3YPositions = new float[] { 1.0f, 2.0f };
-
     public GameObject[] round4Variants;
     public float[] round4YPositions = new float[] { 1.5f, 2.5f };
-
     public GameObject[] round5Variants;
     public float[] round5YPositions = new float[] { 1f, 1.5f };
-
     public GameObject[] round6Variants;
     public float[] round6YPositions = new float[] { 2f, 2.5f };
 
+    // Random obstacles
     public GameObject[] randomObstaclePrefabs;
     public float randomObstacleY = 0f;
+
+    // UI Score text
     public Text scoreText;
 
+    // Timer and spawn control
     private float timer = 0f;
     public Vector3 spawnPosition = new Vector3(10f, 0f, 0f);
 
+    // Round speeds & spawn intervals
     public float[] roundSpeeds = new float[] { 2f, 2.5f, 5f, 3.5f, 4f, 4.5f };
-
     public float[] roundSpawnIntervals = new float[] { 5f, 5f, 2f, 4f, 3f, 3f };
 
     void Start()
     {
-        StartGame startGameScript = gameObject.GetComponent<StartGame>();
+        // 자동 활성화된 다른 스크립트 있다면 켜기 (필요시)
+        var startGameScript = gameObject.GetComponent<StartGame>();
         if (startGameScript != null)
-        {
             startGameScript.enabled = true;
-        }
     }
 
     void Update()
     {
+        // 게임 일시정지 시 아무것도 하지 않음
+        if (StopGameScript.IsPaused || !this.enabled) return;
+
         int score = ParseScoreFromText();
         int roundIndex = GetRoundIndex(score);
 
@@ -61,9 +63,9 @@ public class MakePrefab : MonoBehaviour
 
         Debug.Log($"[Spawn] Score: {score}, RoundIndex: {roundIndex}, Interval: {currentInterval}, Speed: {speed}");
 
+        // 라운드에 맞는 프리팹 선택
         GameObject prefabToSpawn = null;
         float yForSpawn = 0f;
-
         GameObject[] variants = null;
         float[] variantYs = null;
 
@@ -89,7 +91,7 @@ public class MakePrefab : MonoBehaviour
                 variants = round5Variants;
                 variantYs = round5YPositions;
                 break;
-            case 5:  
+            case 5:
                 variants = round6Variants;
                 variantYs = round6YPositions;
                 break;
@@ -99,7 +101,6 @@ public class MakePrefab : MonoBehaviour
         {
             int randomIndex = Random.Range(0, variants.Length);
             prefabToSpawn = variants[randomIndex];
-
             if (variantYs != null && randomIndex < variantYs.Length)
                 yForSpawn = variantYs[randomIndex];
         }
@@ -107,6 +108,7 @@ public class MakePrefab : MonoBehaviour
         if (prefabToSpawn != null)
             SpawnPrefab(prefabToSpawn, yForSpawn, speed);
 
+        // 점수 200 이상일 때 랜덤 장애물 스폰 (50% 확률)
         if (score >= 200 && randomObstaclePrefabs != null && randomObstaclePrefabs.Length > 0)
         {
             if (Random.value < 0.5f)
@@ -120,6 +122,8 @@ public class MakePrefab : MonoBehaviour
 
     void SpawnPrefab(GameObject prefab, float baseY, float speed)
     {
+        if (StopGameScript.IsPaused) return; // 중복 방어
+
         Vector3 spawnPos = new Vector3(spawnPosition.x, baseY, 0f);
         GameObject clone = Instantiate(prefab, spawnPos, Quaternion.identity);
         Destroy(clone, 12f);
@@ -138,6 +142,8 @@ public class MakePrefab : MonoBehaviour
 
     void SpawnObstacle(GameObject prefab)
     {
+        if (StopGameScript.IsPaused) return; // 중복 방어
+
         Vector3 spawnPos = new Vector3(spawnPosition.x, randomObstacleY, spawnPosition.z);
         GameObject clone = Instantiate(prefab, spawnPos, Quaternion.identity);
         Destroy(clone, 12f);
@@ -149,20 +155,13 @@ public class MakePrefab : MonoBehaviour
 
     int GetRoundIndex(int score)
     {
-        if (score >= 500)
-            return 5;
-        else if (score >= 400)
-            return 4;
-        else if (score >= 300)
-            return 3;
-        else if (score >= 200)
-            return 2;
-        else if (score >= 100)
-            return 1;
-        else
-            return 0;
+        if (score >= 500) return 5;
+        else if (score >= 400) return 4;
+        else if (score >= 300) return 3;
+        else if (score >= 200) return 2;
+        else if (score >= 100) return 1;
+        else return 0;
     }
-
 
     GameObject GetRandomPrefabFromArray(GameObject[] arr)
     {
@@ -171,7 +170,8 @@ public class MakePrefab : MonoBehaviour
 
         List<GameObject> validPrefabs = new List<GameObject>();
         foreach (var go in arr)
-            if (go != null) validPrefabs.Add(go);
+            if (go != null)
+                validPrefabs.Add(go);
 
         if (validPrefabs.Count == 0)
             return null;

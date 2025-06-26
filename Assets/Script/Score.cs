@@ -33,6 +33,8 @@ public class Score : MonoBehaviour
 
     void Update()
     {
+        if (StopGameScript.IsPaused) return;
+
         if (score >= 600)
         {
             SceneManager.LoadScene("GameResultScene");  
